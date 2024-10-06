@@ -37,10 +37,12 @@ export class IdentificationService {
 
   calculateChecksum(code: string): number {
     const weights = [1, 2, 3, 4, 5, 6, 7, 8, 9, 1];
+
     let sum = 0;
     for (let i = 0; i < code.length; i++) {
       sum += parseInt(code[i]) * weights[i];
     }
+
     const remainder = sum % 11;
     return remainder === 10 ? 0 : remainder;
   }

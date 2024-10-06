@@ -21,25 +21,33 @@ export class IdentificationController {
       throw new BadRequestException('Invalid gender. Must be MALE or FEMALE');
     }
 
-    const dateRegex = /^(\d{2})\.(\d{2})\.(\d{4})$/;
-    const match = birthDate.match(dateRegex);
-    if (!match) {
+    const parts = birthDate.split('.');
+    if (parts.length !== 3) {
       throw new BadRequestException(
         'Invalid birth date format. Must be dd.mm.yyyy',
       );
     }
 
-    const [day, month, year] = [match[1], match[2], match[3]];
-    const parsedDate = new Date(`${year}-${month}-${day}`);
-    if (isNaN(parsedDate.getTime())) {
+    const [day, month, year] = parts;
+    const dayNum = parseInt(day, 10);
+    const monthNum = parseInt(month, 10);
+    const yearNum = parseInt(year, 10);
+
+    if (
+      isNaN(dayNum) ||
+      isNaN(monthNum) ||
+      isNaN(yearNum) ||
+      dayNum < 1 ||
+      dayNum > 31 ||
+      monthNum < 1 ||
+      monthNum > 12 ||
+      yearNum < 1800 ||
+      yearNum > 2199
+    ) {
       throw new BadRequestException('Invalid birth date');
     }
 
-    if (parseInt(year) < 1800 || parseInt(year) > 2199) {
-      throw new BadRequestException(
-        'I am not able to generate you a id based on this date',
-      );
-    }
+    const parsedDate = new Date(`${yearNum}-${monthNum}-${dayNum}`);
 
     const personalCode = this.identificationService.generatePersonalCode(
       gender,
