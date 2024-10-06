@@ -18,10 +18,6 @@ export class IdentificationService {
 
     let genderCode: number;
 
-    if (year < 1800 && year > 2199) {
-      return 'I am not able to generate you an id';
-    }
-
     if (year >= 1800 && year <= 1899) {
       genderCode = gender === 'MALE' ? 1 : 2;
     } else if (year >= 1900 && year <= 1999) {
@@ -82,7 +78,7 @@ export class IdentificationService {
     const providedChecksum = digits[10];
 
     let sum1 = 0;
-    let calculationSteps = 'First calculation with weight 1:\n';
+    let calculationSteps = 'First calculation with weight 1:<br/>';
 
     for (let i = 0; i < 10; i++) {
       const product = digits[i] * this.WEIGHT_1[i];
@@ -92,7 +88,7 @@ export class IdentificationService {
     }
 
     const remainder1 = sum1 % 11;
-    calculationSteps += ` = ${sum1}.\n${sum1} ÷ 11 = ${Math.floor(sum1 / 11)} remainder ${remainder1}.\n`;
+    calculationSteps += ` = ${sum1}.<br/>${sum1} ÷ 11 = ${Math.floor(sum1 / 11)} remainder ${remainder1}.<br/>`;
 
     if (remainder1 < 10) {
       calculationSteps += `Therefore, checksum should be ${remainder1}.`;
@@ -106,7 +102,7 @@ export class IdentificationService {
 
     // If remainder1 is 10, try with WEIGHT_2
     calculationSteps +=
-      'Since remainder is 10, trying second calculation with weight 2:\n';
+      'Since remainder is 10, trying second calculation with weight 2:<br/>';
     let sum2 = 0;
 
     for (let i = 0; i < 10; i++) {
@@ -117,7 +113,7 @@ export class IdentificationService {
     }
 
     const remainder2 = sum2 % 11;
-    calculationSteps += ` = ${sum2}.\n${sum2} ÷ 11 = ${Math.floor(sum2 / 11)} remainder ${remainder2}.\n`;
+    calculationSteps += ` = ${sum2}.<br/>${sum2} ÷ 11 = ${Math.floor(sum2 / 11)} remainder ${remainder2}.<br/>`;
 
     let finalChecksum: number;
     if (remainder2 < 10) {

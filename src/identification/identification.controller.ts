@@ -35,6 +35,12 @@ export class IdentificationController {
       throw new BadRequestException('Invalid birth date');
     }
 
+    if (parseInt(year) < 1800 || parseInt(year) > 2199) {
+      throw new BadRequestException(
+        'I am not able to generate you a id based on this date',
+      );
+    }
+
     const personalCode = this.identificationService.generatePersonalCode(
       gender,
       parsedDate,
