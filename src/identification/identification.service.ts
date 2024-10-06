@@ -46,7 +46,7 @@ export class IdentificationService {
       sum += parseInt(code[i]) * weights[i];
     }
     const remainder = sum % 11;
-    return remainder === 10 ? 0 : remainder; // Checksum rules
+    return remainder === 10 ? 0 : remainder;
   }
 
   parseIdentification(id: string): ParsedIdentification {
