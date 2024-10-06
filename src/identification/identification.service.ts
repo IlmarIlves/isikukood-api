@@ -11,6 +11,44 @@ export class IdentificationService {
   private readonly WEIGHT_1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 1];
   private readonly WEIGHT_2 = [3, 4, 5, 6, 7, 8, 9, 1, 2, 3];
 
+  generatePersonalCode(gender: 'MALE' | 'FEMALE', birthDate: Date): string {
+    const year = birthDate.getFullYear();
+    const month = String(birthDate.getMonth() + 1).padStart(2, '0');
+    const day = String(birthDate.getDate()).padStart(2, '0');
+
+    let genderCode: number;
+
+    if (year < 1800 && year > 2199) {
+      return 'I am not able to generate you an id';
+    }
+
+    if (year >= 1800 && year <= 1899) {
+      genderCode = gender === 'MALE' ? 1 : 2;
+    } else if (year >= 1900 && year <= 1999) {
+      genderCode = gender === 'MALE' ? 3 : 4;
+    } else if (year >= 2000 && year <= 2099) {
+      genderCode = gender === 'MALE' ? 5 : 6;
+    } else if (year >= 2100 && year <= 2199) {
+      genderCode = gender === 'MALE' ? 7 : 8;
+    }
+
+    const personalCodeWithoutChecksum = `${genderCode!}${year.toString().slice(2)}${month}${day}001`;
+
+    const checksum = this.calculateChecksum(personalCodeWithoutChecksum);
+
+    return personalCodeWithoutChecksum + checksum;
+  }
+
+  calculateChecksum(code: string): number {
+    const weights = [1, 2, 3, 4, 5, 6, 7, 8, 9, 1];
+    let sum = 0;
+    for (let i = 0; i < code.length; i++) {
+      sum += parseInt(code[i]) * weights[i];
+    }
+    const remainder = sum % 11;
+    return remainder === 10 ? 0 : remainder; // Checksum rules
+  }
+
   parseIdentification(id: string): ParsedIdentification {
     const genderDigit = parseInt(id.substring(0, 1));
     const yearOfBirth = parseInt(id.substring(1, 3));
